@@ -4,7 +4,7 @@ from import_airfoil import importer
 from copy import deepcopy
 
 def pointsgen(file,domsize):
-    _,airfoil = importer(file)
+    _,_,_,airfoil = importer(file)
     halflen = int((len(airfoil)+1)/2)
     airfoil_up = airfoil[0:halflen,:]
     airfoil_up = airfoil_up[airfoil_up[:,0].argsort()[::1]]
