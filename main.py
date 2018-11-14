@@ -10,7 +10,8 @@ mid_panel, normal_panel, length_panel, airfoil = ia.importer(filename)
 
 # input grid
 domsize = 2
-grid = gg.pointsgen(filename, domsize)
+npoints = 10
+grid = gg.pointsgen(filename, domsize,npoints)
 
 # input boundary condition
 u_inf = np.array([5, 0])
