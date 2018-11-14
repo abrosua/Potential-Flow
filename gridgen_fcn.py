@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from import_airfoil import importer
 from copy import deepcopy
 
-def pointsgen(file,domsize):
+def pointsgen(file,domsize,npoints):
     _,_,_,airfoil = importer(file)
     halflen = int((len(airfoil)+1)/2)
     airfoil_up = airfoil[0:halflen,:]
@@ -20,9 +20,9 @@ def pointsgen(file,domsize):
     dom_width = np.array([-domsize*chord, domsize*chord])
 
     #Define number of nodes at each block
-    xnode_out = 30
-    xnode_foil = 30
-    ynode = 30
+    xnode_out = npoints
+    xnode_foil = npoints
+    ynode = npoints
 
     #Array initialization
     #Block 1 (upleft block)
