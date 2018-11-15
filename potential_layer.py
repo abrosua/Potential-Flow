@@ -45,7 +45,7 @@ def solve_var(r, r_n, length_panel, mid_panel, g, u_inf):
     # variable initialization
     r[r == 0] = np.nan
     lambda_ij = cp.do_phi(r, r_n)
-    lambda_ij[lambda_ij == np.nan] = 0
+    lambda_ij[np.isnan(lambda_ij)] = 0
 
     # solving the integral matrix
     ds = np.tensordot(np.ones(len(r)), length_panel, axes=0)
@@ -61,7 +61,8 @@ def solve_var(r, r_n, length_panel, mid_panel, g, u_inf):
     # --------------------------------------------------------
 
     # calculate tangential velocity (V_i = V_s + U_inf.n)
-    v_i = np.dot(beta, h) + u_ext
+    temp_v = np.dot(beta, h)
+    v_i = temp_v + u_ext
 
     # calculate cp = 1 - (v_i/|U_inf|)^2
     c_p = 1 - np.divide(v_i, np.linalg.norm(u_inf))**2

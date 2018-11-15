@@ -16,7 +16,7 @@ def importer(file):
 
     mid_panel = np.zeros(shape=[np.size(airfoil_coord, axis=0)-1, 2])
     normal_panel = np.zeros(shape=np.shape(mid_panel))
-    length_panel = np.zeros(shape=[np.size(mid_panel, 0), 1])
+    length_panel = np.zeros(shape=[np.size(mid_panel, 0),])
 
     for i in range(0, len(mid_panel)):
         mid_panel[i, :] = (airfoil_coord[i, :] + airfoil_coord[i+1, :]) / 2
@@ -25,10 +25,10 @@ def importer(file):
         vec_panel = airfoil_coord[i+1, :] - airfoil_coord[i, :]
         res = np.cross(np.append(vec_panel, 0), np.array([0, 0, 1]))
         normal_panel[i, :] = res[0:2]
-        length_panel[i, :] = np.linalg.norm(vec_panel)
+        length_panel[i] = np.linalg.norm(vec_panel)
 
     # normalization of normal vector
-    norm_panel = np.linalg.norm(normal_panel, axis=1)
+    norm_panel = np.linalg.norm(normal_panel, axis=1)/(0.01*length_panel)
     temp_norm = np.column_stack([norm_panel, norm_panel])
     normal_panel[:, :] = np.divide(normal_panel, temp_norm)
 

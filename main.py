@@ -4,14 +4,14 @@ import gridgen_fcn as gg
 import numpy as np
 import matplotlib.pyplot as plt
 
-filename = "airfoil_coord.txt"
+filename = "2410.txt"
 
 mid_panel, normal_panel, length_panel, airfoil = ia.importer(filename)
 
 # input grid
 domsize = 2
 npoints = 10
-grid = gg.pointsgen(filename, domsize,npoints)
+grid = gg.pointsgen(filename, domsize, npoints)
 
 # input boundary condition
 u_inf = np.array([5, 0])
@@ -25,4 +25,5 @@ potential, c_p, c_l = pl.pot(mid_panel, normal_panel, length_panel, g, u_inf, la
 plt.plot(mid_panel[:, 0], c_p)
 plt.show()
 
+print(c_p)
 print(c_l)

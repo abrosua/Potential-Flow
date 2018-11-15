@@ -5,7 +5,7 @@ import numpy as np
 
 
 def phi(r):
-    res = -np.log(np.linalg.norm(r, axis=1)) / (2*np.pi)
+    res = -np.log(np.abs(r)) / (2*np.pi)
     return res
 
 
