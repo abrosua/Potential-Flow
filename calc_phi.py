@@ -9,6 +9,6 @@ def phi(r):
     return res
 
 
-def do_phi(r, r_n):
-    res = np.divide((phi(r+r_n) - phi(r)), r_n)
+def do_phi(r, rplusrn):
+    res = np.divide((phi(rplusrn) - phi(r)), rplusrn)
     return res

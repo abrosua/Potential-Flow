@@ -4,30 +4,36 @@
 
 import numpy as np
 import calc_phi as cp
+import vectorcalc
 
 
 # Potential solver
 def pot(mid_panel, normal_panel, length_panel, g, u_inf, layer, grid):
 
     # ============================= VARIABLES INITIALIZATION =============================
-    r_vec = np.linalg.norm(mid_panel, axis=1)
-    r_norm = np.linalg.norm(normal_panel, axis=1)
-    x_vec = np.linalg.norm(grid, axis=1)
+    # OLD VERSION
+    # r_vec = np.linalg.norm(mid_panel, axis=1)
+    # r_norm = np.linalg.norm(normal_panel, axis=1)
+    # x_vec = np.linalg.norm(grid, axis=1)
+    #
+    # # recreate r, r_n and ds as an 2-D array
+    # r = np.tensordot(r_vec, np.ones(len(r_vec)), axes=0)
+    # r[:, :] = r - np.transpose(r)
+    # r_n = np.tensordot(np.ones(len(r_norm)), r_norm, axes=0)
 
-    # recreate r, r_n and ds as an 2-D array
-    r = np.tensordot(r_vec, np.ones(len(r_vec)), axes=0)
-    r[:, :] = r - np.transpose(r)
-    r_n = np.tensordot(np.ones(len(r_norm)), r_norm, axes=0)
+    # #Old version recreate grid coordinate as an 2-D array
+    # x = np.tensordot(x_vec, np.ones(len(r_vec)), axes=0)
+    # rp = np.tensordot(np.ones(len(x_vec)), r_vec, axes=0)
+    # rho = x - rp
+    # rho_n = np.tensordot(np.ones(len(x_vec)), r_norm, axes=0)
 
-    # recreate grid coordinate as an 2-D array
-    x = np.tensordot(x_vec, np.ones(len(r_vec)), axes=0)
-    rp = np.tensordot(np.ones(len(x_vec)), r_vec, axes=0)
-    rho = x - rp
-    rho_n = np.tensordot(np.ones(len(x_vec)), r_norm, axes=0)
-
+    # NEW VERSION
+    r,rplusrn = vectorcalc.calc_r(mid_panel,normal_panel)
+    rho,rho_n = vectorcalc.calc_rho(grid,normal_panel)
     # ====================================================================================
+
     # calculate h, cp, cl, cd and gamma
-    h, c_p, c_l = solve_var(r, r_n, length_panel, mid_panel, g, u_inf)
+    h, c_p, c_l = solve_var(r, rplusrn, length_panel, mid_panel, g, u_inf)
 
     # calculate potential
     if layer == 'single':
