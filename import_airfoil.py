@@ -33,4 +33,5 @@ def importer(file):
     normal_panel[:, :] = np.divide(normal_panel, temp_norm)
 
     del norm_panel, temp_norm
-    return (mid_panel, normal_panel, length_panel, airfoil_coord)
+    
+    return mid_panel, normal_panel, length_panel, airfoil_coord

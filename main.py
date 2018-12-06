@@ -19,10 +19,10 @@ g = 0
 
 # calculate potential
 layer = 'single'
-potential, c_p, c_l = pl.pot(mid_panel, normal_panel, length_panel, g, u_inf, layer, grid)
+pot_panel, pot_grid, c_p, c_l = pl.pot(mid_panel, normal_panel, length_panel, g, u_inf, layer, grid)
 
 # post-processing
-plt.plot(mid_panel[:, 0], c_p)
+plt.plot(mid_panel[:, 0], -c_p)
 plt.show()
 
 print(c_p)
