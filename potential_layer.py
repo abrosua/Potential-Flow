@@ -29,11 +29,11 @@ def pot(mid_panel, normal_panel, length_panel, g, u_inf, layer, grid):
 
     # NEW VERSION
     r, rplusrn = vectorcalc.calc_r(mid_panel, normal_panel)
-    rho, rho_n = vectorcalc.calc_rho(grid, normal_panel)
+    rho, rho_n = vectorcalc.calc_rho(grid, mid_panel, normal_panel)
     # ====================================================================================
 
     # calculate h, cp, cl, cd and gamma
-    h = solve_var(r, rplusrn, length_panel, mid_panel, g, u_inf)
+    h = solve_var(r, rplusrn, length_panel, normal_panel, g, u_inf)
 
     # calculate potential
     if layer == 'single':
@@ -109,22 +109,37 @@ def calc_coeff(potential, coord):
     y = coord[:, 1]
 
     # Calculate tangential velocity from potential
+    stag_point = np.argmin(np.abs(potential))
     v_theta = np.zeros(len(coord))
-    for i in range(0, len(coord)-1):
-        v_theta[i] = (potential[i+1]-potential[i])/(np.arctan2(y[i+1], x[i+1]) - np.arctan2(y[i], x[i]))
-    v_theta[-1] = (potential[0]-potential[-1])/(np.arctan2(y[0], x[0]) - np.arctan2(y[-1], x[-1]))
 
-    v_theta[:] = np.divide(v_theta, np.linalg.norm(coord, axis=1))
+    # upper
+    for i in range(np.int(stag_point), -1, -1):
+        if i == 0:
+            v_theta[i] = (potential[i] - potential[i+1]) / (x[i]-x[i+1])
+            # (np.arctan2(y[i], x[i]) - np.arctan2(y[i+1], x[i+1]))
+        else:
+            v_theta[i] = (potential[i-1]-potential[i]) / (x[i-1]-x[i])
+            #(np.arctan2(y[i-1], x[i-1]) - np.arctan2(y[i], x[i]))
+
+    # lower
+    for i in range(np.int(stag_point+1), len(coord)):
+        if i == len(coord)-1:
+            v_theta[i] = (potential[i] - potential[i-1]) / (x[i]-x[i-1])
+            # (np.arctan2(y[i], x[i]) - np.arctan2(y[i+1], x[i+1]))
+        else:
+            v_theta[i] = (potential[i+1]-potential[i]) / (x[i+1]-x[i])
+            #(np.arctan2(y[i-1], x[i-1]) - np.arctan2(y[i], x[i]))
+
+    #v_theta[:] = np.divide(v_theta, np.linalg.norm(coord, axis=1))
 
     # Calculate cp from tangential velocity
     c_p = 1 - v_theta**2
 
     # Calculate cl from cp
-    stag_point = np.argmin(np.abs(v_theta))
-    c_pu = c_p[0:stag_point+1]
-    c_pl = c_p[stag_point:]
-    x_u = x[0:stag_point+1]
-    x_l = x[stag_point:]
+    c_pu = c_p[0:stag_point]
+    c_pl = c_p[stag_point+1:]
+    x_u = x[0:stag_point]
+    x_l = x[stag_point+1:]
 
     c_l = 0
     for i in range(0, len(c_pu)-1):
