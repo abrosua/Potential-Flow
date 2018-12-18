@@ -28,7 +28,8 @@ def importer(file):
         length_panel[i] = np.linalg.norm(vec_panel)
 
     # normalization of normal vector
-    norm_panel = np.linalg.norm(normal_panel, axis=1)/(0.01*length_panel)
+    factor = 1
+    norm_panel = length_panel/factor
     temp_norm = np.column_stack([norm_panel, norm_panel])
     normal_panel[:, :] = np.divide(normal_panel, temp_norm)
 
